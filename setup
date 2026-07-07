@@ -4,3 +4,21 @@ set -eux -o pipefail
 
 CWD="$(pwd)"
 ln -nsf "$CWD" "$HOME/.config/nvim"
+
+VERSION="0.12.4"
+TARBALL="nvim-linux-x86_64.tar.gz"
+URL="https://github.com/neovim/neovim/releases/download/v${VERSION}/${TARBALL}"
+HASH="012bf3fcac5ade43914df3f174668bf64d05e049a4f032a388c027b1ebd78628"
+
+if ! [ -e ~/.cache/nvim-download-$VERSION ]
+then
+    pushd /tmp
+    rm -f "$TARBALL"
+    wget "$URL"
+    echo "$HASH  $TARBALL" | sha256sum -c
+    tar -xzf "$TARBALL"
+    rm -rf "$HOME/.local/share/nvim"
+    mv nvim-linux-x86_64 "$HOME/.local/share/nvim"
+    ln -nsf "$HOME/.local/share/nvim/bin/nvim" "$HOME/.local/bin/nvim"
+    touch ~/.cache/nvim-download-$VERSION
+fi
