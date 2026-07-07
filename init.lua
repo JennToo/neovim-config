@@ -7,48 +7,26 @@ end
 
 vim.g.send_disable_mapping = true
 
-if vim.fn.filereadable(home .. "/.config/nvim/autoload/plug.vim") ~= 0
-then
-    local Plug = vim.fn['plug#']
-    vim.call("plug#begin", '~/.local/share/nvim/plugged')
-
-    Plug('neovim/nvim-lspconfig')
-    Plug('hrsh7th/cmp-nvim-lsp')
-    Plug('hrsh7th/cmp-buffer')
-    Plug('hrsh7th/cmp-path')
-    Plug('hrsh7th/cmp-cmdline')
-    Plug('hrsh7th/nvim-cmp')
-    Plug('hrsh7th/cmp-vsnip')
-    Plug('hrsh7th/vim-vsnip')
-
-    Plug('roxma/nvim-yarp')
-    Plug('mfussenegger/nvim-lint')
-    Plug(
-        'junegunn/fzf',
-        {
-            ['do'] = function()
-                vim.fn['fzf#install']()
-            end
-        }
-    )
-    Plug('junegunn/fzf.vim')
-    Plug('lukas-reineke/indent-blankline.nvim')
-    Plug('rose-pine/neovim')
-    Plug('nvim-lua/plenary.nvim')
-    Plug('junegunn/vim-easy-align')
-    Plug('dknaack/qf-diagnostics.nvim')
-
-    Plug(
-        'nvim-treesitter/nvim-treesitter',
-        {
-            ['do'] = function()
-                vim.fn['TSUpdate']()
-            end
-        }
-    )
-
-    vim.call('plug#end')
-end
+vim.pack.add({
+    'https://github.com/neovim/nvim-lspconfig',
+    'https://github.com/hrsh7th/cmp-nvim-lsp',
+    'https://github.com/hrsh7th/cmp-buffer',
+    'https://github.com/hrsh7th/cmp-path',
+    'https://github.com/hrsh7th/cmp-cmdline',
+    'https://github.com/hrsh7th/nvim-cmp',
+    'https://github.com/hrsh7th/cmp-vsnip',
+    'https://github.com/hrsh7th/vim-vsnip',
+    'https://github.com/roxma/nvim-yarp',
+    'https://github.com/mfussenegger/nvim-lint',
+    'https://github.com/junegunn/fzf',
+    'https://github.com/junegunn/fzf.vim',
+    'https://github.com/lukas-reineke/indent-blankline.nvim',
+    'https://github.com/rose-pine/neovim',
+    'https://github.com/nvim-lua/plenary.nvim',
+    'https://github.com/junegunn/vim-easy-align',
+    'https://github.com/dknaack/qf-diagnostics.nvim',
+    'https://github.com/nvim-treesitter/nvim-treesitter',
+})
 
 vim.opt.termguicolors = true
 vim.opt.clipboard= "unnamedplus"
@@ -265,7 +243,7 @@ require("ibl").setup {
         }
     },
 }
-require'nvim-treesitter.configs'.setup {
+require('nvim-treesitter').setup {
   ensure_installed = {
       "bash",
       "c",
