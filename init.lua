@@ -20,7 +20,6 @@ then
     Plug('hrsh7th/nvim-cmp')
     Plug('hrsh7th/cmp-vsnip')
     Plug('hrsh7th/vim-vsnip')
-    Plug('andersevenrud/cmp-tmux')
 
     Plug('roxma/nvim-yarp')
     Plug('mfussenegger/nvim-lint')
@@ -38,9 +37,6 @@ then
     Plug('nvim-lua/plenary.nvim')
     Plug('junegunn/vim-easy-align')
     Plug('dknaack/qf-diagnostics.nvim')
-    Plug('mtikekar/nvim-send-to-term')
-    Plug('gpanders/nvim-parinfer')
-    Plug('samsaga2/vim-z80')
 
     Plug(
         'nvim-treesitter/nvim-treesitter',
@@ -106,10 +102,6 @@ vim.keymap.set('n', '<Leader>dd', function()
     vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end, opts)
 
--- The defaults replace 's', which is no good
-vim.keymap.set('n', 'S', '<Plug>Send')
-vim.keymap.set('v', 'S', '<Plug>Send')
-
 -- Navigation keys
 vim.keymap.set('t', '<A-h>', '<C-\\><C-N><C-w>h', opts)
 vim.keymap.set('t', '<A-j>', '<C-\\><C-N><C-w>j', opts)
@@ -127,8 +119,8 @@ vim.keymap.set('n', '<A-l>', '<C-w>l', opts)
 vim.o.background = "light"
 require('rose-pine').setup({
     highlight_groups = {
-		StatusLine = { fg = 'pine', bg = 'pine', blend = 20 },
-		StatusLineNC = { fg = 'pine' },
+        StatusLine = { fg = 'pine', bg = 'pine', blend = 20 },
+        StatusLineNC = { fg = 'pine' },
     }
 })
 vim.cmd.colorscheme('rose-pine')
@@ -150,20 +142,6 @@ vim.opt.wildignore = {
     '*.jar',
     '*.pyc'
 }
-
-vim.api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
-    pattern = {'*.s', '*.S', '*.a65'},
-    callback = function()
-        vim.opt.filetype = 'asm_ca65'
-    end
-})
-
-vim.api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
-    pattern = {'*.zuo'},
-    callback = function()
-        vim.opt.filetype = 'racket'
-    end
-})
 
 vim.api.nvim_create_autocmd('FileType', {
     pattern = {'gitcommit', 'markdown', 'rst'},
