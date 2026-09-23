@@ -20,5 +20,6 @@ then
     rm -rf "$HOME/.local/share/nvim"
     mv nvim-linux-x86_64 "$HOME/.local/share/nvim"
     ln -nsf "$HOME/.local/share/nvim/bin/nvim" "$HOME/.local/bin/nvim"
+    rm -f ~/.cache/nvim-download-*
     touch ~/.cache/nvim-download-$VERSION
 fi
