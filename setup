@@ -5,10 +5,10 @@ set -eux -o pipefail
 CWD="$(pwd)"
 ln -nsf "$CWD" "$HOME/.config/nvim"
 
-VERSION="0.12.4"
+VERSION="0.12.5"
 TARBALL="nvim-linux-x86_64.tar.gz"
 URL="https://github.com/neovim/neovim/releases/download/v${VERSION}/${TARBALL}"
-HASH="012bf3fcac5ade43914df3f174668bf64d05e049a4f032a388c027b1ebd78628"
+HASH="bce0f56eda1f1b1db6eee8f4133d7a38813ea07933837dd1777411ca384c6875"
 
 if ! [ -e ~/.cache/nvim-download-$VERSION ]
 then
