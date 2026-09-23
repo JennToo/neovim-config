@@ -43,3 +43,23 @@ then
     rm -f ~/.cache/tree-sitter--*
     touch ~/.cache/tree-sitter--$VERSION
 fi
+
+# vhdl-ls
+VERSION="0.88.0"
+TARBALL="vhdl_ls-x86_64-unknown-linux-musl.zip"
+URL="https://github.com/VHDL-LS/rust_hdl/releases/download/v${VERSION}/${TARBALL}"
+HASH="5cb90333e5f93e11d83d4f980b7c7ff204b11283c854efcafe2ff0b5cf41f7ec"
+
+if ! [ -e ~/.cache/vhdl-ls-$VERSION ]
+then
+    pushd /tmp
+    rm -f "$TARBALL"
+    wget "$URL"
+    echo "$HASH  $TARBALL" | sha256sum -c
+    unzip "$TARBALL"
+    rm -rf "$HOME/.local/share/vhdl-ls/*"
+    mv vhdl_ls-x86_64-unknown-linux-musl "$HOME/.local/share/vhdl-ls/"
+    ln -nsf "$HOME/.local/share/vhdl-ls/bin/vhdl_ls" "$HOME/.local/bin/vhdl_ls"
+    rm -f ~/.cache/vhdl-ls--*
+    touch ~/.cache/vhdl-ls--$VERSION
+fi

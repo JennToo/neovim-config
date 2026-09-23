@@ -4,29 +4,20 @@ vim.g.send_disable_mapping = true
 
 vim.pack.add({
     'https://github.com/neovim/nvim-lspconfig',
-    'https://github.com/hrsh7th/cmp-nvim-lsp',
-    'https://github.com/hrsh7th/cmp-buffer',
-    'https://github.com/hrsh7th/cmp-path',
-    'https://github.com/hrsh7th/cmp-cmdline',
-    'https://github.com/hrsh7th/nvim-cmp',
-    'https://github.com/hrsh7th/cmp-vsnip',
-    'https://github.com/hrsh7th/vim-vsnip',
-    'https://github.com/roxma/nvim-yarp',
     'https://github.com/mfussenegger/nvim-lint',
     'https://github.com/junegunn/fzf',
     'https://github.com/junegunn/fzf.vim',
     'https://github.com/lukas-reineke/indent-blankline.nvim',
     'https://github.com/rose-pine/neovim',
-    'https://github.com/nvim-lua/plenary.nvim',
     'https://github.com/junegunn/vim-easy-align',
     'https://github.com/dknaack/qf-diagnostics.nvim',
     'https://github.com/nvim-treesitter/nvim-treesitter',
 })
 
 vim.opt.termguicolors = true
-vim.opt.clipboard= "unnamedplus"
-vim.opt.spelllang="en"
-vim.opt.spellfile=home .."/.config/nvim/en.utf-8.add"
+vim.opt.clipboard = "unnamedplus"
+vim.opt.spelllang = "en"
+vim.opt.spellfile = home .. "/.config/nvim/en.utf-8.add"
 vim.opt.cursorline = true
 
 vim.opt.makeprg = "quickfix-parser /tmp/last-build.log"
@@ -34,6 +25,10 @@ vim.opt.errorformat = "type %t file %f line %l col %c message %m"
 
 vim.opt.list = true
 vim.opt.listchars="tab:\\u2192 ,trail:\\u2592"
+
+vim.opt.completeopt = { "menuone", "noselect", "popup", "fuzzy" }
+vim.opt.autocomplete = true
+vim.opt.complete = ".^5,o,w^5" -- use buffer and omnifunc
 
 vim.api.nvim_create_autocmd('TermOpen', {
     pattern = "*",
@@ -154,39 +149,6 @@ vim.api.nvim_create_autocmd({'FocusGained', 'BufEnter'}, {
     end
 })
 
-local lspconfig = require('lspconfig')
-local cmp = require('cmp')
-
-cmp.setup({
-    snippet = {
-      expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body)
-      end,
-    },
-    window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-    },
-    mapping = cmp.mapping.preset.insert({
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    }),
-    sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'vsnip' },
-    }, {
-        { name = 'buffer' },
-        { name = 'path' },
-        { name = 'tmux' },
-    }),
-    completion = {
-        completeopt = 'menu,menuone,noinsert,preview',
-    },
-})
-
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
 -- The manual says these are on by default, but they don't seem to be
@@ -196,11 +158,17 @@ vim.keymap.set('n', 'grr', vim.lsp.buf.references, opts)
 vim.keymap.set('n', 'gri', vim.lsp.buf.implementation, opts)
 vim.keymap.set('i', '<C-s>', vim.lsp.buf.signature_help, opts)
 
-local servers = { 'clangd', 'rust_analyzer', 'pylsp', 'vhdl_ls' }
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local servers = { 'clangd', 'rust_analyzer', 'vhdl_ls' }
 for _, lsp in ipairs(servers) do
-  vim.lsp.config (lsp, {
-      capabilities = capabilities
+  vim.lsp.config(lsp, {
+      on_attach = function(client, bufnr)
+          vim.lsp.completion.enable(true, client.id, bufnr, {
+              autotrigger = true,
+              convert = function(item)
+                  return { abbr = item.label:gsub('%b()', '') }
+              end,
+          })
+      end,
   })
   vim.lsp.enable(lsp)
 end
@@ -209,14 +177,6 @@ vim.cmd [[highlight IndentBlanklineIndent1 guibg=#E4EEEE gui=nocombine]]
 vim.cmd [[highlight IndentBlanklineIndent2 guibg=#F9E9E5 gui=nocombine]]
 vim.cmd [[highlight IndentBlanklineIndent3 guibg=#FAF5EF gui=nocombine]]
 vim.cmd [[highlight IndentBlanklineIndent4 guibg=#F9E9E5 gui=nocombine]]
-
-vim.g.vsnip_snippet_dirs = {home .. '/.vsnip-local/'}
-vim.cmd [[
-    imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-    smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-    imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-    smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-]]
 
 require("ibl").setup {
     indent = {
